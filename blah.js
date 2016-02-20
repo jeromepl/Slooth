@@ -1,9 +1,6 @@
-
-$("#start_button").on("click", function(event) {
-	startButton(event);
-})
-
-
+$("#start_button").on("click",function(e){
+  startButton(e);
+});
 
 var langs =
 [['Afrikaans',       ['af-ZA']],
@@ -116,6 +113,9 @@ if (!('webkitSpeechRecognition' in window)) {
     if (event.error == 'not-allowed') {
       if (event.timeStamp - start_timestamp < 100) {
         showInfo('info_blocked');
+
+
+
       } else {
         showInfo('info_denied');
       }
