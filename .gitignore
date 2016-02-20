@@ -1,3 +1,6 @@
 # eclipse stuff
 .project
 /.settings
+
+# test files
+test_simon.html
