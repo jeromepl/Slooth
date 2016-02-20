@@ -1,0 +1,13 @@
+body
+{
+    font-family: Arial, sans-serif;
+}
+
+.popup{
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    width: 50%;
+    position: relative;
+}
