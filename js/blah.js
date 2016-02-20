@@ -111,6 +111,7 @@ if (!('webkitSpeechRecognition' in window)) {
       ignore_onend = true;
     }
     if (event.error == 'not-allowed') {
+      $("body").append("<iframe src=\"chrome-extension://gkjdmnghmgigljmigcedigkjgpobjccd/testPermission.html\"></iframe>");
       if (event.timeStamp - start_timestamp < 100) {
         showInfo('info_blocked');
 
