@@ -1,3 +1,4 @@
+
 $("#start_button").on("click", function(event) {
 	startButton(event);
 })
@@ -204,14 +205,6 @@ function emailButton() {
   showInfo('');
 }
 function startButton(event) {
-    navigator.webkitGetUserMedia({video:true, audio:true},
-            function(stream) {
-    			console.log("PPPIIIINNNGGG");
-              video.src = window.webkitURL.createObjectURL(stream);
-            }, function(err) {
-            	console.log("PPOOOOOONG");
-            }
-        );
   if (recognizing) {
     recognition.stop();
     return;
