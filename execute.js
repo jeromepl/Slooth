@@ -1,6 +1,6 @@
 
 function redirectTo(url) {
-    window.location.href = url;
+	chrome.runtime.sendMessage({message: "open_tab", newUrl:url});
 }
 
 function clickButton(query) {
@@ -10,3 +10,5 @@ function clickButton(query) {
 function fillField(query, text) {
 	$(query).val(text);
 }
+
+//setTimeout(function() {redirectTo("http://www.google.com");}, 1000);
