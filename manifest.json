@@ -25,7 +25,6 @@
   "permissions": [
     "activeTab",
     "tabs",
-    "audioCapture",
     "storage",
     "https://ajax.googleapis.com/"
   ]
