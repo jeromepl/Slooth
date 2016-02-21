@@ -3,15 +3,63 @@ body
     font-family: Arial, sans-serif;
 }
 
-.popup{
-    margin: 50px auto;
+popup{
+    margin: 40px auto;
     padding: 20px;
     background: white;
     border-radius: 10px;
-    width: 50%;
+    width: 40%;
     position: relative;
+    overflow: scroll;
+    text-align: center;
+    
 }
-.botton {
-    color:green;
-    background-color: aqua;
+button {
+    background-color: aquamarine;
+    color:black;
+    width: 200px;
+    position: relative;
+    left:auto;
+    text-align: center;
+    top: 40%;
+    border-radius: 2px;
+    
 }
+#macroList
+{
+	position: absolute;
+	line-height:40px;
+	left: 100px;
+    background-color:#eeeeee;
+    height:500px;
+    width:200px;
+    float:left;
+	margin: 10px;
+    padding:5px;
+}
+			ul
+			{
+				list-style-type: none;
+				margin:0;
+				padding: 0;
+				width:200px;
+				background-color: #f1f1f1;
+			}
+			li a
+			{
+				display:block;
+				color: #000;
+				padding: 8px 0 8px 8px;
+				text-decoration: none;
+                text-align: center;
+			}
+			li a.active
+			{
+				background-color: #4CAF50;
+				color: white;
+			}
+			li a:hover
+			{
+				background-color: #555;
+				color: white;
+			}
