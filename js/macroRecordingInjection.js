@@ -8,7 +8,7 @@ $(document).ready(function () {
     console.log(url + " is");
     if (url == recordURL) {
         console.log("record");
-        $("body").append("<button id=\"confirmation\">Register Macro Phrase</button>");
+        $("#record").append("<button id=\"confirmation\">Register Macro Phrase</button>");
     }
 
 
