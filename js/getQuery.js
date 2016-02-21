@@ -33,6 +33,7 @@ function getQuery(e) {
     else
         finalString = query[0];
 
-    console.log(finalString);
-    console.log($(finalString)[0]);
+    //console.log(finalString);
+    //console.log($(finalString)[0]);
+    return finalString;
 }
