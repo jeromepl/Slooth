@@ -11,4 +11,4 @@ function fillField(query, text) {
 	$(query).val(text);
 }
 
-//setTimeout(function() {redirectTo("http://www.google.com");}, 1000);
+//chrome.runtime.sendMessage({message: "start_recording"});

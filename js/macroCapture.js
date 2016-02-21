@@ -1,43 +1,33 @@
-var recording = false;
-
-var actions = [];
 
 function startRecording() {
-    recording = true;
+    chrome.runtime.sendMessage({message: "start_recording"});
 }
 
 function stopRecording() {
-    recording = false;
-    store();
-    actions = [];
+    chrome.runtime.sendMessage({message: "start_recording"});
 }
 
 $(document).on('click', function(e) {
-    if(recording) {
-    	actions.push({
-    		type: "click",
-    		element: getQuery(e.target)
-    	});
-    }
+    chrome.runtime.sendMessage({message: "add_action", action: {
+		type: "click",
+		element: getQuery(e.target)
+	}});
 });
+
 
 //Detect URL change
 $(document).on('ready', function(e) {
-    if(recording) {
-    	actions.push({
-    		type: "redirect",
-    		url: window.location.href,
-    	});
-    }
+    chrome.runtime.sendMessage({message: "add_action", action: {
+		type: "redirect",
+		url: window.location.href,
+	}});
 });
 
 $(document).on('blur', function(e) {
-    if(recording) {
-        actions.push({
-        	type: "text",
-        	text: $(e.target).text()
-        });
-    }
+    chrome.runtime.sendMessage({message: "add_action", action: {
+    	type: "text",
+    	text: $(e.target).text()
+	}});
 });
 
 $(document).on('submit', function(e) {
@@ -46,10 +36,3 @@ $(document).on('submit', function(e) {
     	
     }
 });
-
-function store() {
-	chrome.storage.local.get("macros", function(items) {
-		console.log(items);
-	});
-	chrome.storage.local.set({"macros" : actions});
-}

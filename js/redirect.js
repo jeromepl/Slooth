@@ -1,3 +1,7 @@
+var recording = false;
+
+var actions = [];
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.message == "redirect_tab") {
@@ -5,6 +9,21 @@ chrome.runtime.onMessage.addListener(
     }
     else if (request.message == "open_tab") {
     	openNewTab(request.newUrl);
+    }
+    else if (request.message == "start_recording") {
+    	console.log("START");
+    	recording = true;
+    }
+    else if (request.message == "stop_recording") {
+    	console.log("STOP");
+    	store();
+    	actions = [];
+    	recording = false;
+    }
+    else if (request.message == "add_action") {
+    	if (recording) {
+    		actions.push(request.action);
+    	}
     }
 });
 
@@ -14,4 +33,12 @@ function redirectCurrentTab(sender, newUrl) {
 
 function openNewTab(newUrl) {
 	chrome.tabs.create({url: newUrl});
+}
+
+
+function store() {
+	chrome.storage.local.get("macros", function(items) {
+		console.log(items);
+	});
+	chrome.storage.local.set({"macros" : actions});
 }
