@@ -11,6 +11,17 @@ $(document).ready(function (e) {
             $("ul").append("<li><a href='#'>" + userMacros[i].activationPhrase + "</a></li>");
         }
     });
+    
+    chrome.runtime.sendMessage({message: "is_recording"}, function(response) {
+            if (!response.rec) {
+                $("#record").text("Record New Macro");
+                $("#record").removeClass("recording");
+            } 
+            else {
+                $("#record").text("Stop Recording");
+                $("#record").addClass("recording");
+            }
+    });
 });
 
 $('#record').on('click', function (e) {
