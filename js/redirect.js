@@ -57,6 +57,7 @@ chrome.runtime.onMessage.addListener(
     }
     else if(request.message =="loadPhrase")
     {
+        console.log("hear you loud and clear");
         chrome.storage.local.get({userMacros:[]},function(result){
 
         var userMacros = result.userMacros;
@@ -66,7 +67,6 @@ chrome.runtime.onMessage.addListener(
             var result =-1;
              for(var i=0; i<userMacros.length;i++)
             {
-                console.log("phrase on storage for "+i+" index is "+userMacros[i].activationPhrase);
                if(userMacros[i].activationPhrase == request.phrase)
                {
                  result=i;
@@ -77,17 +77,19 @@ chrome.runtime.onMessage.addListener(
             {
                 actions=tempActions= userMacros[result].macros;
                 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                //chrome.tabs.sendMessage(tabs[0].id, {message: "execute_actions", macro: actions});
-                                console.log("the detected actions are "+userMacros[result].macros);
-
                 executeActions(tempActions, tabs[0]);
 
                 });
             }
+            else
+            {
+                sendResponse({error_msg:"No Macros matched activation phrase."});
+
+            }
         }
         else
         {
-            console.log("There are no macros to launch!");
+            sendResponse({error_msg:"There are no macros to launch!"});
         }
         
       });

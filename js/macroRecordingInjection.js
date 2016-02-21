@@ -11,22 +11,26 @@ $(document).ready(function(){
 		console.log("record");
 		$("body").append("<button id=\"confirmation\">Register Macro Phrase</button>");
 	}
-	else if (url==launchURL) {
-		console.log("launch");
-		$("body").append("<button id=\"confirmation\">Launch Macro</button>");
-
-	};
+	
 
 	$("#confirmation").on("click",function(){
 		msg = $("#textBox").text();
-		if(url==recordURL){
-		chrome.runtime.sendMessage({message:"setPhrase",phrase:msg});
-		window.top.close();
-		}
-		else if(url==launchURL){
-			console.log("button pressed, message is"+msg);
-			chrome.runtime.sendMessage({message:"loadPhrase",phrase:msg});
+			if(url==recordURL){
+			chrome.runtime.sendMessage({message:"setPhrase",phrase:msg});
+			window.top.close();
+			}
+		});
 
+
+	$("#textBox").bind('DOMNodeInserted DOMSubtreeModified DOMNodeRemoved', function(event) {
+		console.log("test");
+		if(url=launchURL){
+			msg = $("#textBox").text();
+			console.log(msg);
+			chrome.runtime.sendMessage({message:"loadPhrase",phrase:msg});
 		}
 	});
+
 });
+		
+
