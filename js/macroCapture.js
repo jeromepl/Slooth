@@ -1,11 +1,4 @@
 
-function startRecording() {
-    chrome.runtime.sendMessage({message: "start_recording"});
-}
-
-function stopRecording() {
-    chrome.runtime.sendMessage({message: "start_recording"});
-}
 
 $(document).on('click', function(e) {
     chrome.runtime.sendMessage({message: "add_action", action: {

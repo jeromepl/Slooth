@@ -14,5 +14,8 @@ $('#record').on('click', function(e) {
 });
 
 $("#button2").on("click", function(e) {
-	chrome.runtime.sendMessage({message:"run_macro"});
+	chrome.runtime.sendMessage({message:"open_tab", newUrl: "http://localhost/TestNuance/recordPage.html?launch"});
+	 //openNewTab("http://localhost/TestNuance/recordPage.html?launch");
+	 //console.log("pressed launch");
+
 });
