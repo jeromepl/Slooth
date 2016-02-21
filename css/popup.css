@@ -36,6 +36,14 @@ button:hover {
     background-color: #384858;
 }
 
+.recording {
+    background-color: #e74c3c;
+}
+
+button.recording:hover {
+    background-color: #e35b4d;
+}
+
 #button2:hover {
     background-color: #405365;
 }
