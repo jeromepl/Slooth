@@ -1,3 +1,7 @@
+$( document ).ready(function() {
+    chrome.runtime.sendMessage({message: "flush_actions"});
+});
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.message == "execute") {

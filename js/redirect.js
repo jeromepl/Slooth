@@ -1,6 +1,8 @@
 var recording = false;
+var needFlushing = false;
 
 var actions = [];
+var tempActions = [];
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -32,20 +34,36 @@ chrome.runtime.onMessage.addListener(
     	load();
     	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     		//chrome.tabs.sendMessage(tabs[0].id, {message: "execute_actions", macro: actions});
-    		console.log(actions.length);
-        	for (var i = 0; i < actions.length; i++) {
-        		console.log(actions[i]);
-        		if (actions[i].type == "click") {
-        			console.log(actions[i].type);
-            		chrome.tabs.sendMessage(tabs[0].id, {message: "execute", action: actions[i]});
-        		}
-        		else {
-        			chrome.tabs.sendMessage(tabs[0].id, {message: "execute", action: actions[i]});
-        		}
-        	}
+    		executeActions(actions, tabs[0]);
+
     	});
     }
+    else if (request.message == "flush_actions") {
+    	if (needFlushing) {
+    		needFlushing = false;
+        	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        		//chrome.tabs.sendMessage(tabs[0].id, {message: "execute_actions", macro: actions});
+        		executeActions(tempActions, tabs[0]);
+
+        	});
+    	}
+    }
 });
+
+function executeActions(acts, tab) {
+	for (var i = 0; i < actions.length; i++) {
+		console.log(actions[i]);
+		if (actions[i].type == "redirect" && i != actions.length - 1) {
+			tempActions = acts.slice(i+1, actions.length);
+			needFlushing = true;
+    		chrome.tabs.sendMessage(tab.id, {message: "execute", action: acts[i]});
+    		break;
+		}
+		else {
+			chrome.tabs.sendMessage(tab.id, {message: "execute", action: acts[i]});
+		}
+	}
+}
 
 function redirectCurrentTab(sender, newUrl) {
 	chrome.tabs.update(sender.tab.id, {url: newUrl});
