@@ -75,10 +75,10 @@ function openNewTab(newUrl) {
 
 
 function store() {
+	for (var i = 0; i < actions.length; i++) {
+		console.log(actions[i]);
+	}
 	chrome.storage.local.set({"macros" : actions});
-	//chrome.storage.local.get("macros", function(items) {
-		//console.log(items);
-	//});
 }
 
 function load() {
