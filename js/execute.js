@@ -7,7 +7,6 @@ $(document).ready(function () {
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.message == "execute") {
-            console.log(request.action.element);
             if (request.action.type == "redirect") {
                 redirectTo(request.action.url);
             } else if (request.action.type == "click") {
