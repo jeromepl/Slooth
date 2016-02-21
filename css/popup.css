@@ -25,6 +25,17 @@ button {
     border-radius: 2px;
     
 }
+#button2 {
+    background-color: cadetblue;
+    color:black;
+    width: 170px;
+    position: relative;
+    left:10px;
+    text-align: center;
+    top: 40%;
+    border-radius: 2px;
+    
+}
 #macroList
 {
 	position: absolute;
