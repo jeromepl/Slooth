@@ -14,4 +14,5 @@ $('#record').on('click', function(e) {
 });
 
 $("#button2").on("click", function(e) {
+	chrome.runtime.sendMessage({message:"run_macro"});
 });

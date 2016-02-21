@@ -12,12 +12,12 @@ chrome.runtime.onMessage.addListener(
     }
     else if (request.message == "start_recording") {
     	console.log("START");
+    	actions = [];
     	recording = true;
     }
     else if (request.message == "stop_recording") {
     	console.log("STOP");
     	store();
-    	actions = [];
     	recording = false;
     }
     else if (request.message == "add_action") {
@@ -27,6 +27,23 @@ chrome.runtime.onMessage.addListener(
     }
     else if (request.message == "is_recording") {
     	sendResponse({rec:recording});
+    }
+    else if (request.message == "run_macro") {
+    	load();
+    	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    		//chrome.tabs.sendMessage(tabs[0].id, {message: "execute_actions", macro: actions});
+    		console.log(actions.length);
+        	for (var i = 0; i < actions.length; i++) {
+        		console.log(actions[i]);
+        		if (actions[i].type == "click") {
+        			console.log(actions[i].type);
+            		chrome.tabs.sendMessage(tabs[0].id, {message: "execute", action: actions[i]});
+        		}
+        		else {
+        			chrome.tabs.sendMessage(tabs[0].id, {message: "execute", action: actions[i]});
+        		}
+        	}
+    	});
     }
 });
 
@@ -41,7 +58,14 @@ function openNewTab(newUrl) {
 
 function store() {
 	chrome.storage.local.set({"macros" : actions});
+	//chrome.storage.local.get("macros", function(items) {
+		//console.log(items);
+	//});
+}
+
+function load() {
 	chrome.storage.local.get("macros", function(items) {
-		console.log(items);
+		//console.log(items);
+		actions = items.macros;
 	});
 }
