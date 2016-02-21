@@ -25,6 +25,9 @@ chrome.runtime.onMessage.addListener(
     		actions.push(request.action);
     	}
     }
+    else if (request.message == "is_recording") {
+    	sendResponse({rec:recording});
+    }
 });
 
 function redirectCurrentTab(sender, newUrl) {
@@ -37,8 +40,8 @@ function openNewTab(newUrl) {
 
 
 function store() {
+	chrome.storage.local.set({"macros" : actions});
 	chrome.storage.local.get("macros", function(items) {
 		console.log(items);
 	});
-	chrome.storage.local.set({"macros" : actions});
 }
