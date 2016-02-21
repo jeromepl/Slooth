@@ -1,62 +1,59 @@
-body{
-    background-color:cadetblue;
+body {
+    background-color: cadetblue;
     margin: 0;
     font-family: Arial, sans-serif;
     text-align: center;
 }
 
-#header{
+#header {
     color: white;
     font-size: 60px;
     font-family: Arial, sans-serif;
     text-align: center;
-
 }
 
-#record{
-    position:relative;
-    top:10px;
+#record {
+    position: relative;
+    top: 10px;
     padding: 10px;
     margin-left: -40px;
-    color:white;
+    color: white;
     font-size: 20px;
-    font-family: Arial ,sans-serif;
+    font-family: Arial, sans-serif;
     left: 14%;
     width: 70%;
     height: 70px;
 }
 
-#textBox{
-    position:relative;
+#textBox {
+    position: relative;
     border-style: inset;
     border-color: aliceblue;
-    top:40px;
+    top: 40px;
     padding: 10px;
     margin-left: 0;
-    color:white;
+    color: white;
     font-size: 20px;
-    font-family: Arial ,sans-serif;
+    font-family: Arial, sans-serif;
     left: 14%;
     width: 70%;
     height: 50px;
-    
 }
 
-#footer{
-    position:relative;
-    top:100px;
+#footer {
+    position: relative;
+    top: 100px;
     padding: 10px;
     margin-left: 0;
-    color:white;
+    color: white;
     font-size: 20px;
-    font-family: Arial ,sans-serif;
+    font-family: Arial, sans-serif;
     left: 14%;
     width: 70%;
     height: 50px;
-    
 }
 
-button{
+button {
     margin-left: -60px;
     color: white;
     cursor: pointer;
@@ -64,11 +61,10 @@ button{
     background-color: #2c3e50;
     border: none;
     width: 50px;
-    
     text-align: center;
 }
 
-#recording{
+#recording {
     position: relative;
     top: 10px;
     padding: 10px;
@@ -80,7 +76,8 @@ button{
     width: 40%;
     height: 50px;
 }
-#connect{
+
+#connect {
     position: relative;
     top: 10px;
     padding: 10px;
