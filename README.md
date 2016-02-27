@@ -39,5 +39,6 @@ Special thanks to the following companies for their help and support in providin
 -Google
 -DotTech
 
-![Main Menu](http://www.nodynotes.com/demo_imgs/slooth_main.png)
-![Record Page](http://www.nodynotes.com/demo_imgs/slooth_record.png)
+
+![Main Menu](http://www.nodynotes.com/demo_imgs/slooth_main.jpg)
+![Record Page](http://www.nodynotes.com/demo_imgs/slooth_record.jpg)
