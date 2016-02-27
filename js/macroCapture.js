@@ -1,4 +1,4 @@
-$(document).on('click', function (e) {
+$(document).on('click', function (e) { //TODO, fix query and this should work
     /*chrome.runtime.sendMessage({
         message: "add_action",
         action: {
@@ -20,7 +20,7 @@ $(document).on('ready', function (e) {
     });
 });
 
-window.addEventListener('beforeunload', function (event) {
+window.addEventListener('beforeunload', function (event) { //TODO could maybe be used to differentiate click from redirect?
     console.log(window.location.href);
     //console.log(event);
     //chrome.runtime.sendMessage({message: "add_action", action: {
@@ -29,8 +29,7 @@ window.addEventListener('beforeunload', function (event) {
     //}});
 });
 
-$(document).on('blur', function (e) {
-    console.log(1);
+$(document).on('blur', function (e) { //TODO not working
     chrome.runtime.sendMessage({
         message: "add_action",
         action: {
@@ -41,8 +40,4 @@ $(document).on('blur', function (e) {
 });
 
 $('form').on('submit', function (e) {
-    if (recording) {
-        //Similar to click on submit button?
-
-    }
 });

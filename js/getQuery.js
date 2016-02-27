@@ -6,6 +6,7 @@ function getQuery(e) {
     while(!element.id && element != $('html')[0]) {
         var jEl = $(element);
         if(jEl.index() > 0) { //Since nth-child, eq and nth-of-type dont work well with multiple sub-children, give up and just store the whole element
+            query.push(" > " + element.localName + jEl.index()); //TODO test this
             query = [e];
             break;
         }

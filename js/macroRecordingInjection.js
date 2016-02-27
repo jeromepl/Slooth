@@ -5,36 +5,32 @@ var launchURL = "https://gator4158.hostgator.com/~anecdote/slooth.tech/recordPag
 $(document).ready(function () {
 
     var url = window.location.href;
-    console.log(url + " is");
     if (url == recordURL) {
-        console.log("record");
         $("#record").append("<button id=\"confirmation\">Register Macro Phrase</button>");
     }
 
 
     $("#confirmation").on("click", function () {
-        msg = $("#textBox").text();
+        msg = $("#textBox").text(); //The text returned by Nuance
         console.log(url);
         if (url == recordURL) {
-            // console.log(1);
-            chrome.runtime.sendMessage({
+            chrome.runtime.sendMessage({ //Set the launch text of the last recorded macro
                 message: "setPhrase",
                 phrase: msg
             });
-            window.top.close();
+            window.top.close(); //Close the tab
         }
     });
 
 
     $("#textBox").bind('DOMNodeInserted DOMSubtreeModified DOMNodeRemoved', function (event) {
-        console.log("test");
         if (url == launchURL) {
-            msg = $("#textBox").text();
-            console.log(msg);
-            chrome.runtime.sendMessage({
+            msg = $("#textBox").text(); //The text returned by Nuance
+            chrome.runtime.sendMessage({ //Launch the macro if there is one corresponding to this text
                 message: "loadPhrase",
                 phrase: msg
             });
+            //No need to close the tab, the macro actions will simply redirect it to some other url
         }
     });
 

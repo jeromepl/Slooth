@@ -1,6 +1,6 @@
 $(document).ready(function (e) {
     var arrayMacros = [];
-    chrome.storage.local.get({
+    chrome.storage.local.get({ //Get the macros and display them
         userMacros: []
     }, function (result) {
         console.log(result.userMacros.length);
@@ -12,18 +12,20 @@ $(document).ready(function (e) {
         }
     });
     
+    //Ask the background script if a macro is being recorded at the moment
     chrome.runtime.sendMessage({message: "is_recording"}, function(response) {
-            if (!response.rec) {
-                $("#record").text("Record New Macro");
-                $("#record").removeClass("recording");
-            } 
-            else {
-                $("#record").text("Stop Recording");
-                $("#record").addClass("recording");
-            }
+        if (!response.rec) {
+            $("#record").text("Record New Macro");
+            $("#record").removeClass("recording");
+        }
+        else {
+            $("#record").text("Stop Recording");
+            $("#record").addClass("recording");
+        }
     });
 });
 
+//Start/Stop recording
 $('#record').on('click', function (e) {
     chrome.runtime.sendMessage({
         message: "is_recording"
@@ -34,7 +36,8 @@ $('#record').on('click', function (e) {
             chrome.runtime.sendMessage({
                 message: "stop_recording"
             });
-        } else {
+        }
+        else {
             $("#record").text("Stop Recording");
             $("#record").addClass("recording");
             chrome.runtime.sendMessage({
@@ -44,12 +47,10 @@ $('#record').on('click', function (e) {
     });
 });
 
-$("#button2").on("click", function (e) {
+//Open the microphone page to launch a macro
+$("#launch-macro").on("click", function (e) {
     chrome.runtime.sendMessage({
         message: "open_tab",
         newUrl: "https://gator4158.hostgator.com/~anecdote/slooth.tech/recordPage.html?launch"
     });
-    //openNewTab("http://localhost/TestNuance/recordPage.html?launch");
-    //console.log("pressed launch");
-
 });
