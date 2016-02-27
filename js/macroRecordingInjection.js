@@ -1,9 +1,11 @@
+//Inject stuff in the slooth.tech webpage to make it work with the chrome extension
+
 var confirmButton;
 var msg;
 var recordURL = "https://gator4158.hostgator.com/~anecdote/slooth.tech/recordPage.html?record";
 var launchURL = "https://gator4158.hostgator.com/~anecdote/slooth.tech/recordPage.html?launch";
-$(document).ready(function () {
 
+$(document).ready(function () {
     var url = window.location.href;
     if (url == recordURL) {
         $("#record").append("<button id=\"confirmation\">Register Macro Phrase</button>");
