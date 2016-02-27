@@ -34,7 +34,10 @@ In the future, the Slooth creators hope to implement the following:
 -Implementation of the Nuance NLU api to add more customization options to macros (such as verbs with differing parameters).
 
 #Thanks
-Special thanks to the following companies for their help and support in providing us with ressources and APIs:
+Special thanks to the following companies for their help and support in providing us with resources and APIs:
 -Nuance
 -Google
 -DotTech
+
+![Main Menu](http://www.nodynotes.com/demo_imgs/slooth_main.png)
+![Record Page](http://www.nodynotes.com/demo_imgs/slooth_record.png)
