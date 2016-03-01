@@ -1,43 +1,26 @@
-$(document).on('click', function (e) { //TODO, fix query and this should work
-    /*chrome.runtime.sendMessage({
+$(document).on('click', function (e) {
+    chrome.runtime.sendMessage({
         message: "add_action",
         action: {
             type: "click",
             element: getQuery(e.target)
         }
-    });*/
-});
-
-
-//Detect URL change
-$(document).on('ready', function (e) {
-    chrome.runtime.sendMessage({
-        message: "add_action",
-        action: {
-            type: "redirect",
-            url: window.location.href,
-        }
     });
 });
 
-window.addEventListener('beforeunload', function (event) { //TODO could maybe be used to differentiate click from redirect?
-    console.log(window.location.href);
-});
-
-$(document).on('blur', function (e) { //TODO not working
+//TODO
+/*$(document).on('keyup', function (e) {
     chrome.runtime.sendMessage({
         message: "add_action",
         action: {
-            type: "text",
-            text: $(e.target).text()
+            type: "keyup",
+            element: e.which
         }
-    });
-});
-
-$('form').on('submit', function (e) {
-});
+    })
+});*/
 
 //From an DOM element, get a query to that DOM element
+//TODO: jquery error when id contains ':' ?
 function getQuery(e) {
     var element = e;
     var query = [];
@@ -45,12 +28,10 @@ function getQuery(e) {
     while(!element.id && element != $('html')[0]) {
         var jEl = $(element);
         if(jEl.index() > 0) { //Since nth-child, eq and nth-of-type dont work well with multiple sub-children, give up and just store the whole element
-            query.push(" > " + element.localName + jEl.index()); //TODO test this
-            query = [e];
-            break;
+            query.push('> ' + element.localName + ':nth-child(' + (jEl.index()+1) + ')');
         }
         else {
-            query.push(element.localName);
+            query.push('> ' + element.localName);
         }
         element = $(element).parent()[0];
     }
@@ -58,6 +39,8 @@ function getQuery(e) {
     var id;
     if(id = element.id) //Add the last id
         query.push('#' + id);
+    else
+        query.push('html');
 
     //Reverse the array
     for(var i = 0; i < query.length / 2; i++) {
@@ -71,7 +54,7 @@ function getQuery(e) {
     if(query.length > 1)
         finalString = query.join(" ");
     else
-        finalString = query[0];
+        finalString = query[0]; //joining a single element isn't nice
 
     //console.log(finalString);
     //console.log($(finalString)[0]);

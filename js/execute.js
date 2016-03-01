@@ -31,5 +31,6 @@ function clickButton(query) { //TODO, fix query
 }
 
 function fillField(query, text) { //TODO
+    //http://stackoverflow.com/questions/4158847/is-there-a-way-to-simulate-key-presses-or-a-click-with-javascript
     $(query).val(text);
 }

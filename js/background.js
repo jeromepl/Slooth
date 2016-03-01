@@ -4,8 +4,18 @@ var waiting = false; //If the current macro execution is waiting on a redirect t
 var actions = []; //The actions of the currently loaded macro, or the remaining actions to perform
 
 var activeMacro = 0;
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
+//Listener for redirects not caused by clicks
+chrome.webNavigation.onCommitted.addListener(function (e) {
+    if(e.transitionType != "auto_subframe" && e.transitionType != "generated" && e.transitionType != "reload" && e.transitionType != "link" && e.transitionType != "form_submit") {
+        actions.push({
+            type: "redirect",
+            url: e.url
+        });
+    }
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.message == "redirect_tab") {
         redirectCurrentTab(sender, request.newUrl);
     }

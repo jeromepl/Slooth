@@ -2,6 +2,8 @@
 .project
 /.settings
 
+/test/
+
 # test files
 test_simon.html
 test_simon.js
