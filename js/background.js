@@ -54,6 +54,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
         });
     }
+    else if (request.message == "remove_macro") {
+    	console.log(request.phrase);
+    	remove(request.phrase);
+    }
     else if (request.message == "continue_actions") {
         if (waiting) {
             waiting = false;
@@ -174,5 +178,30 @@ function load(phrase) {
                 break;
             }
         }
+    });
+}
+
+// Delete a macro for the given phrase
+function remove(phrase) {
+    chrome.storage.local.get({
+        userMacros: []
+    }, function (result) {
+        var userMacros = result.userMacros;
+        for(var i = 0; i < userMacros.length; i++) {
+            console.log(userMacros[i]);
+        }
+        for(var i = 0; i < userMacros.length; i++) {
+            if(userMacros[i].activationPhrase == phrase) {
+                userMacros.splice(i,1);
+                console.log("PONG MOTHERUCKER");
+                break;
+            }
+        }
+        for(var i = 0; i < userMacros.length; i++) {
+            console.log(userMacros[i]);
+        }
+        chrome.storage.local.set({
+            "userMacros": userMacros
+        });
     });
 }

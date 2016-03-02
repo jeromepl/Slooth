@@ -8,7 +8,7 @@ $(document).ready(function (e) {
         var userMacros = result.userMacros;
         for (var i = 0; i < userMacros.length; i++) {
             arrayMacros.push(userMacros[i].activationPhrase);
-            $("#macroList").append("<li><div class='macro'>" + userMacros[i].activationPhrase + "</div></li>");
+            $("#macroList").append("<li><div class='macro'>" + "<div id=\"phrase\">" + userMacros[i].activationPhrase + "</div>" + "<img id=\"removeButton\" src=\"letter-x.png\" width=\"25\" height=\"25\">" + "</div></li>");
         }
     });
     
@@ -56,8 +56,19 @@ $("#launch-macro").on("click", function (e) {
 });
 
 $('#macroList').on('click', function(e) {
-    chrome.runtime.sendMessage({
-        message: "run_macro",
-        phrase: e.target.innerHTML
-    });
+	if (e.target.id == "removeButton") {
+		chrome.runtime.sendMessage({
+	        message: "remove_macro",
+	        phrase: $(e.target).parent().children("#phrase").html()
+	    });
+		$(e.target).parent().remove();
+		//console.log($(e.target).parent().children("#phrase").html());
+	}
+	else {
+		chrome.runtime.sendMessage({
+        	message: "run_macro",
+        	phrase: $(e.target).children("#phrase").html()
+    	});
+		//console.log($(e.target).children("#phrase").html());
+	}
 });
