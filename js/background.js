@@ -33,6 +33,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         recording = false;
     }
     else if (request.message == "add_action") { //A click, redirect, form submission or other event was detected: add it to the actions list
+        console.log(request.action.type);
         if (recording) {
             actions.push(request.action);
         }
@@ -42,8 +43,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             rec: recording
         });
     }
-    else if (request.message == "run_macro") { //Run a specific macro (specified by request.id)
-        load(request.index);
+    else if (request.message == "run_macro") { //Run a specific macro (specified by request.phrase)
+        console.log(1234);
+        load(request.phrase);
         chrome.tabs.query({
             active: true,
             currentWindow: true
@@ -157,12 +159,18 @@ function store(acts, activationPhrase) {
 }
 
 //Load a macro into the variables actions and phrase
-function load(index) {
+function load(phrase) {
     chrome.storage.local.get({
         userMacros: []
     }, function (result) {
 
         var userMacros = result.userMacros;
-        actions = userMacros[index].macros;
+
+        for(var i = 0; i < userMacros.length; i++) {
+            if(userMacros[i].activationPhrase == phrase) {
+                actions = userMacros[i].macros;
+                break;
+            }
+        }
     });
 }

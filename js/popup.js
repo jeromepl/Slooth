@@ -8,7 +8,7 @@ $(document).ready(function (e) {
         var userMacros = result.userMacros;
         for (var i = 0; i < userMacros.length; i++) {
             arrayMacros.push(userMacros[i].activationPhrase);
-            $("ul").append("<li><a href='#'>" + userMacros[i].activationPhrase + "</a></li>");
+            $("#macroList").append("<li><div class='macro'>" + userMacros[i].activationPhrase + "</div></li>");
         }
     });
     
@@ -52,5 +52,12 @@ $("#launch-macro").on("click", function (e) {
     chrome.runtime.sendMessage({
         message: "open_tab",
         newUrl: "https://gator4158.hostgator.com/~anecdote/slooth.tech/recordPage.html?launch"
+    });
+});
+
+$('#macroList').on('click', function(e) {
+    chrome.runtime.sendMessage({
+        message: "run_macro",
+        phrase: e.target.innerHTML
     });
 });

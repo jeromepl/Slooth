@@ -26,8 +26,11 @@ function redirectTo(url) {
     });
 }
 
-function clickButton(query) { //TODO, fix query
-    $(query).click();
+function clickButton(query) {
+    var jqEl = $(query);
+    jqEl.click();
+    if(jqEl[0].localName == "a")
+        jqEl[0].click();
 }
 
 function fillField(query, text) { //TODO

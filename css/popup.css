@@ -25,12 +25,6 @@ button {
     text-align: center;
 }
 
-#button2 {
-    background-color: #34495e;
-    text-align: center;
-    border: solid 1px black;
-}
-
 button:hover {
     background-color: #384858;
 }
@@ -43,23 +37,7 @@ button.recording:hover {
     background-color: #e35b4d;
 }
 
-#button2:hover {
-    background-color: #405365;
-}
-
 #macroList {
-    position: absolute;
-    line-height: 40px;
-    left: 100px;
-    background-color: #eeeeee;
-    height: 500px;
-    width: 200px;
-    float: left;
-    margin: 10px;
-    padding: 5px;
-}
-
-ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -67,20 +45,16 @@ ul {
     background-color: #f1f1f1;
 }
 
-li a {
+.macro {
     display: block;
     color: #000;
     padding: 8px 0 8px 8px;
     text-decoration: none;
     text-align: center;
+    cursor: pointer;
 }
 
-li a.active {
-    background-color: #4CAF50;
-    color: white;
-}
-
-li a:hover {
+.macro:hover {
     background-color: #555;
     color: white;
 }
