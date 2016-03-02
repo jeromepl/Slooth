@@ -121,6 +121,8 @@ function executeActions(acts, tab) {
             });
             break;
         } else { //The other executes methods are in the content script. Send a message to run them
+            var t = new Date().getTime();
+            while (new Date().getTime() < t + 3000); //TODO replace this by a setTimeout. The clicks need to wait for any pageload...
             chrome.tabs.sendMessage(tab.id, {
                 message: "execute",
                 action: acts[i]

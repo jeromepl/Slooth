@@ -31,6 +31,9 @@ function clickButton(query) {
     jqEl.click();
     if(jqEl[0].localName == "a")
         jqEl[0].click();
+    else if(jqEl[0].localName == "input" && jqEl.attr("type") == "submit") {
+        jqEl.closest("form")[0].submit(); //Submit the form
+    }
 }
 
 function fillField(query, text) { //TODO
