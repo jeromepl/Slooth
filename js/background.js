@@ -7,7 +7,13 @@ var activeMacro = 0;
 
 //Listener for redirects not caused by clicks
 chrome.webNavigation.onCommitted.addListener(function (e) {
-    if(e.transitionType != "auto_subframe" && e.transitionType != "generated" && e.transitionType != "reload" && e.transitionType != "link" && e.transitionType != "form_submit") {
+    if(recording && e.transitionType != "auto_subframe") {
+        if(e.transitionType == "generated" || e.transitionType == "reload" || e.transitionType == "link" || e.transitionType == "form_submit") {
+            //If the redirect was caused by a click, remove the click and save the redirect
+            var lastIndex = actions.length - 1;
+            if(actions[lastIndex].type == 'click') //Make sure the last action was a click
+                actions.splice(lastIndex, 1);
+        }
         actions.push({
             type: "redirect",
             url: e.url
@@ -44,7 +50,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     }
     else if (request.message == "run_macro") { //Run a specific macro (specified by request.phrase)
-        console.log(1234);
         load(request.phrase);
         chrome.tabs.query({
             active: true,
@@ -55,7 +60,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     }
     else if (request.message == "remove_macro") {
-    	console.log(request.phrase);
     	remove(request.phrase);
     }
     else if (request.message == "continue_actions") {
@@ -98,7 +102,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 }
                 else {
                     sendResponse({
-                        error_msg: "No Macros matched activation phrase."
+                        error_msg: "No macros matched activation phrase."
                     });
 
                 }
@@ -125,8 +129,6 @@ function executeActions(acts, tab) {
             });
             break;
         } else { //The other executes methods are in the content script. Send a message to run them
-            var t = new Date().getTime();
-            while (new Date().getTime() < t + 3000); //TODO replace this by a setTimeout. The clicks need to wait for any pageload...
             chrome.tabs.sendMessage(tab.id, {
                 message: "execute",
                 action: acts[i]
@@ -188,18 +190,12 @@ function remove(phrase) {
     }, function (result) {
         var userMacros = result.userMacros;
         for(var i = 0; i < userMacros.length; i++) {
-            console.log(userMacros[i]);
-        }
-        for(var i = 0; i < userMacros.length; i++) {
             if(userMacros[i].activationPhrase == phrase) {
                 userMacros.splice(i,1);
-                console.log("PONG MOTHERUCKER");
                 break;
             }
         }
-        for(var i = 0; i < userMacros.length; i++) {
-            console.log(userMacros[i]);
-        }
+
         chrome.storage.local.set({
             "userMacros": userMacros
         });
