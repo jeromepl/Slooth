@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.message == "execute") {
         if (request.action.type == "redirect") {
             redirectTo(request.action.url);
-        } else if (request.action.type == "click") {
+        } else if (request.action.type == "click") { //Also handles submits
             clickButton(request.action.element);
         } else {
             console.log("Oops, this action is not yet supported");

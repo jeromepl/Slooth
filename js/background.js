@@ -8,7 +8,7 @@ var activeMacro = 0;
 //Listener for redirects not caused by clicks
 chrome.webNavigation.onCommitted.addListener(function (e) {
     if(recording && e.transitionType != "auto_subframe") {
-        if(e.transitionType == "generated" || e.transitionType == "reload" || e.transitionType == "link" || e.transitionType == "form_submit") {
+        if(e.transitionType == "generated" || e.transitionType == "reload" || e.transitionType == "link") {
             //If the redirect was caused by a click, remove the click and save the redirect
             var lastIndex = actions.length - 1;
             if(actions[lastIndex].type == 'click') //Make sure the last action was a click
