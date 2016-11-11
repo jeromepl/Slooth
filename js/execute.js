@@ -33,6 +33,7 @@ function clickButton(query) {
         jqEl[0].click();
     else if(jqEl[0].localName == "input" && jqEl.attr("type") == "submit") {
         jqEl.closest("form")[0].submit(); //Submit the form
+        //TODO: Doesn't work with chrome's preloaded username + email?
     }
 }
 
