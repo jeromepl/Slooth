@@ -1,6 +1,6 @@
 ## Slooth 
 
-Slooth.tech was born from the combined laziness and frustration towards long to navigate school websites of four Montréal based hackers.
+Slooth was born from the combined laziness and frustration towards long to navigate school websites of four Montréal based hackers.
 
 When faced with the task of creating a hack for McHacks 2016, the creators of Slooth found the perfect opportunity to solve a problem they faced for a long time: navigating tediously complicated school websites.
 Inspired by Natural Language Processing technologies and personal assistants such as Google Now and Siri, Slooth was aimed at providing an easy and modern way to access important documents on their school websites.
