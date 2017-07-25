@@ -1,19 +1,19 @@
+function addMacroLi(phrase) {
+    $("#macroList").append("<li class='macro'><div class='phrase'>" + phrase + "</div><img class='removeButton' src='letter-x.png'></li>");
+}
+
 $(document).ready(function (e) {
-    var arrayMacros = [];
-    chrome.storage.local.get({ //Get the macros and display them
+    chrome.storage.local.get({ // Get the macros and display them
         userMacros: []
     }, function (result) {
-        console.log(result.userMacros.length);
-
         var userMacros = result.userMacros;
         for (var i = 0; i < userMacros.length; i++) {
-            arrayMacros.push(userMacros[i].activationPhrase);
-            $("#macroList").append("<li><div class='macro'><div id='phrase'>" + userMacros[i].activationPhrase + "</div><img id='removeButton' src='letter-x.png' width='25' height='25'></div></li>");
+            addMacroLi(userMacros[i].activationPhrase);
         }
     });
     
-    //Ask the background script if a macro is being recorded at the moment
-    chrome.runtime.sendMessage({message: "is_recording"}, function(response) {
+    // Ask the background script if a macro is being recorded at the moment
+    chrome.runtime.sendMessage({ message: "is_recording" }, function(response) {
         if (!response.rec) {
             $("#record").text("Record New Macro");
             $("#record").removeClass("recording");
@@ -25,7 +25,7 @@ $(document).ready(function (e) {
     });
 });
 
-//Start/Stop recording
+// Start/Stop recording
 $('#record').on('click', function (e) {
     chrome.runtime.sendMessage({
         message: "is_recording"
@@ -36,6 +36,18 @@ $('#record').on('click', function (e) {
             chrome.runtime.sendMessage({
                 message: "stop_recording"
             });
+            
+            // TODO rename phrase throughout code to something like macroTitle
+            
+            var phrase = prompt("Enter a name for this macro:");
+            
+            chrome.runtime.sendMessage({ // Set the launch text of the last recorded macro
+                message: "setPhrase",
+                phrase: phrase
+            });
+            
+            // Add the new macro to the list
+            addMacroLi(phrase);
         }
         else {
             $("#record").text("Stop Recording");
@@ -47,26 +59,20 @@ $('#record').on('click', function (e) {
     });
 });
 
-//Open the microphone page to launch a macro
-$("#launch-macro").on("click", function (e) {
+// Execute a macro
+$(document).on('click', '.macro', function(e) {
     chrome.runtime.sendMessage({
-        message: "open_tab",
-        newUrl: "https://gator4158.hostgator.com/~anecdote/slooth.tech/recordPage.html?launch"
+        message: "run_macro",
+        phrase: $(this).find('.phrase').text()
     });
 });
 
-$('#macroList').on('click', function(e) {
-	if (e.target.id == "removeButton") {
-		chrome.runtime.sendMessage({
-	        message: "remove_macro",
-	        phrase: $(e.target).parent().children("#phrase").text()
-	    });
-		$(e.target).parent().remove();
-	}
-	else {
-		chrome.runtime.sendMessage({
-        	message: "run_macro",
-        	phrase: $(e.target).children("#phrase").text()
-    	});
-	}
+// Delete a macro
+$(document).on('click', '.removeButton', function(e) {
+    e.stopPropagation();
+    chrome.runtime.sendMessage({
+        message: "remove_macro",
+        phrase: $(this).siblings('.phrase').text()
+    });
+	$(this).parent().remove(); // Remove the <li> element
 });

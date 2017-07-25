@@ -46,7 +46,9 @@ button.recording:hover {
 }
 
 .macro {
-    display: block;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     color: #000;
     padding: 8px 0 8px 8px;
     text-decoration: none;
@@ -59,10 +61,12 @@ button.recording:hover {
     color: white;
 }
 
-#removeButton {
-		display: block;
+.removeButton {
+    width: 15px;
+    height: 15px;
+    margin: 0 10px;
 }
 
-#removeButton:hover {
+.removeButton:hover {
 	box-shadow: 0px 0px 5px #fff;
 }
