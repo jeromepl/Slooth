@@ -60,9 +60,10 @@ $('#record').on('click', function (e) {
 });
 
 // Execute a macro
-$(document).on('click', '.macro', function(e) {
+$(document).on('mousedown', '.macro', function(e) { // Need to use 'mousedown' to get middle mouse clicks
     chrome.runtime.sendMessage({
         message: "run_macro",
+        newTab: e.shiftKey || e.which === 2, // Open in a new tab if shift click or middle mouse click
         phrase: $(this).find('.phrase').text()
     });
 });

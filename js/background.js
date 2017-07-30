@@ -45,12 +45,18 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         case "run_macro": // Run a specific macro (specified by request.phrase)
             console.log("Launch macro " + request.phrase);
             load(request.phrase, function() {
-                chrome.tabs.query({
-                    active: true,
-                    currentWindow: true
-                }, function (tabs) {
-                    executeActions(actions, tabs[0]);
-                });
+                if (request.newTab) {
+                    chrome.tabs.create({}, function(tab) {
+                        executeActions(actions, tab);
+                    });
+                } else {
+                    chrome.tabs.query({
+                        active: true,
+                        currentWindow: true
+                    }, function (tabs) {
+                        executeActions(actions, tabs[0]);
+                    });
+                }
             });
             break;
         case "remove_macro":
