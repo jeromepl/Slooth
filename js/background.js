@@ -1,11 +1,7 @@
-// TODO this file needs a big refactor
-
 var recording = false;
 var waiting = false; // If the current macro execution is waiting on a redirect to finish
 
-var actions = []; // The actions of the currently loaded macro, or the remaining actions to perform
-
-var activeMacro = 0;
+var actions = []; // The actions of the currently loaded macro, or the remaining actions to perform after a redirect
 
 // Listener for redirects not caused by clicks
 chrome.webNavigation.onCommitted.addListener(function (e) {

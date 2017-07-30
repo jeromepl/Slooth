@@ -3,17 +3,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-popup {
-    margin: 40px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    width: 40%;
-    position: relative;
-    overflow: scroll;
-    text-align: center;
-}
-
 button {
     color: white;
     cursor: pointer;
