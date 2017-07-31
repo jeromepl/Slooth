@@ -41,13 +41,15 @@ $('#record').on('click', function (e) {
             
             var phrase = prompt("Enter a name for this macro:");
             
-            chrome.runtime.sendMessage({ // Set the launch text of the last recorded macro
-                message: "setPhrase",
-                phrase: phrase
-            });
-            
-            // Add the new macro to the list
-            addMacroLi(phrase);
+            if (phrase) {
+                chrome.runtime.sendMessage({ // Set the launch text of the last recorded macro
+                    message: "setPhrase",
+                    phrase: phrase
+                });
+
+                // Add the new macro to the list
+                addMacroLi(phrase);
+            }
         }
         else {
             $("#record").text("Stop Recording");
