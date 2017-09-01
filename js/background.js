@@ -3,6 +3,8 @@ var waiting = false; // If the current macro execution is waiting on a redirect 
 
 var actions = []; // The actions of the currently loaded macro, or the remaining actions to perform after a redirect
 
+updateBrowserBadge(); // Update the badge initially
+
 // Listener for redirects not caused by clicks
 chrome.webNavigation.onCommitted.addListener(function (e) {
     if (recording && e.transitionType != "auto_subframe") {
@@ -26,10 +28,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             console.log("Start Recording");
             actions = []; // Reset the actions
             recording = true;
+            updateBrowserBadge();
             break;
         case "stop_recording":
             console.log("Stop Recording");
             recording = false;
+            updateBrowserBadge();
             break;
         case "add_action": // A click, redirect, form submission or other event was detected: add it to the actions list
             if (recording) {
@@ -167,4 +171,16 @@ function remove(phrase) {
             "userMacros": userMacros
         });
     });
+}
+
+// Update the badge over the icon in the chrome menu to show a "recording" sign if we are recording
+function updateBrowserBadge() {
+    if (recording) {
+        chrome.browserAction.setBadgeBackgroundColor({ color: "#FF0000" });
+        chrome.browserAction.setBadgeText({ text: " ◉" });
+        chrome.browserAction.setTitle({ title: "Slooth - Recording" });
+    } else {
+        chrome.browserAction.setBadgeText({ text: "" });
+        chrome.browserAction.setTitle({ title: "Slooth" });
+    }
 }
