@@ -1,5 +1,5 @@
 function addMacroLi(phrase) {
-    $("#macroList").append("<li class='macro'><div class='phrase'>" + phrase + "</div><img class='removeButton' src='letter-x.png'></li>");
+    $("#macroList").append("<li class='macro'><div class='phrase'>" + phrase + "</div><img class='removeButton' src='x-sm.png' title='Delete this macro'></li>");
 }
 
 $(document).ready(function (e) {
@@ -68,6 +68,14 @@ $(document).on('mousedown', '.macro', function(e) { // Need to use 'mousedown' t
         newTab: e.shiftKey || e.which === 2, // Open in a new tab if shift click or middle mouse click
         phrase: $(this).find('.phrase').text()
     });
+});
+
+// Highlight the "x" button on hover
+$(document).on('mouseenter', '.removeButton', function(e) {
+    $(this).attr("src", "x-sm-light.png");
+});
+$(document).on('mouseleave', '.removeButton', function(e) {
+    $(this).attr("src", "x-sm.png");
 });
 
 // Delete a macro
