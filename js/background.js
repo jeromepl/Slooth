@@ -46,26 +46,26 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 rec: recording
             });
             break;
-        case "run_macro": // Run a specific macro (specified by request.phrase)
-            console.log("Launch macro " + request.phrase);
-            load(request.phrase, function() {
+        case "run_macro": // Run a specific macro (specified by request.macroName)
+            console.log("Launch macro " + request.macroName);
+            load(request.macroName, function() {
                 if (request.newTab) {
                     chrome.tabs.create({}, function(tab) {
-                        executeActions(actions, tab);
+                        executeActions(tab);
                     });
                 } else {
                     chrome.tabs.query({
                         active: true,
                         currentWindow: true
                     }, function (tabs) {
-                        executeActions(actions, tabs[0]);
+                        executeActions(tabs[0]);
                     });
                 }
             });
             break;
         case "remove_macro":
-            console.log("Remove macro " + request.phrase);
-            remove(request.phrase);
+            console.log("Remove macro " + request.macroName);
+            remove(request.macroName);
             break;
         case "continue_actions":
             if (waiting) { // The redirect has finished, we can continue running the actions
@@ -75,19 +75,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                     active: true,
                     currentWindow: true
                 }, function (tabs) {
-                    executeActions(actions, tabs[0]);
+                    executeActions(tabs[0]);
                 });
             }
             break;
-        case "setPhrase": // Save the recorded actions into storage with the given phrase
-            console.log("Set phrase " + request.phrase);
-            store(actions, request.phrase);
+        case "saveMacro": // Save the recorded actions into storage with the given name in request.macroName
+            console.log("Set macro name " + request.macroName);
+            store(actions, request.macroName);
             break;
 
     }
 });
 
-function executeActions(acts, tab) {
+function executeActions(tab) {
     for (var i = 0; i < actions.length; i++) {
         
         var actionType = actions[i].type;
@@ -103,27 +103,27 @@ function executeActions(acts, tab) {
 
         // If the action is redirect we need to store the remaining actions that will need to be performed after the new page has loaded
         if ((actionType === "redirect" || actionType === "event_redirect") && i !== actions.length - 1) {
-            actions = acts.slice(i + 1, actions.length);
+            actions = actions.slice(i + 1, actions.length);
             waiting = true;
             break;
         } else { // The handlers for the other 'actionType's are in the content script. Send a message to run them
             chrome.tabs.sendMessage(tab.id, {
                 message: "execute",
-                action: acts[i]
+                action: actions[i]
             });
         }
     }
 }
 
 // Add a macro to the current list of macros in the local storage
-function store(acts, activationPhrase) {
+function store(macroActions, macroName) {
     chrome.storage.local.get({
         userMacros: []
     }, function (result) {
         var userMacros = result.userMacros;
         userMacros.push({
-            "macros": acts,
-            "activationPhrase": activationPhrase
+            "actions": macroActions,
+            "name": macroName
         });
 
         chrome.storage.local.set({
@@ -132,8 +132,8 @@ function store(acts, activationPhrase) {
     });
 }
 
-// Load a macro into the variables actions and phrase
-function load(phrase, callback) {
+// Load a macro into the variables actions
+function load(macroName, callback) {
     chrome.storage.local.get({
         userMacros: []
     }, function (result) {
@@ -142,8 +142,8 @@ function load(phrase, callback) {
         actions = [];
 
         for (var i = 0; i < userMacros.length; i++) {
-            if (userMacros[i].activationPhrase === phrase) {
-                actions = userMacros[i].macros;
+            if (userMacros[i].name === macroName) {
+                actions = userMacros[i].actions;
                 break;
             }
         }
@@ -154,14 +154,14 @@ function load(phrase, callback) {
     });
 }
 
-// Delete a macro for the given phrase
-function remove(phrase) {
+// Delete a macro with the given name
+function remove(macroName) {
     chrome.storage.local.get({
         userMacros: []
     }, function (result) {
         var userMacros = result.userMacros;
         for (var i = 0; i < userMacros.length; i++) {
-            if (userMacros[i].activationPhrase === phrase) {
+            if (userMacros[i].name === macroName) {
                 userMacros.splice(i,1);
                 break;
             }

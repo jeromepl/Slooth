@@ -1,5 +1,5 @@
-function addMacroLi(phrase) {
-    $("#macroList").append("<li class='macro'><div class='phrase'>" + phrase + "</div><img class='removeButton' src='x-sm.png' title='Delete this macro'></li>");
+function addMacroLi(macroName) {
+    $("#macroList").append("<li class='macro'><div class='macro-name'>" + macroName + "</div><img class='removeButton' src='x-sm.png' title='Delete this macro'></li>");
 }
 
 $(document).ready(function (e) {
@@ -8,7 +8,7 @@ $(document).ready(function (e) {
     }, function (result) {
         var userMacros = result.userMacros;
         for (var i = 0; i < userMacros.length; i++) {
-            addMacroLi(userMacros[i].activationPhrase);
+            addMacroLi(userMacros[i].name);
         }
     });
     
@@ -37,18 +37,16 @@ $('#record').on('click', function (e) {
                 message: "stop_recording"
             });
             
-            // TODO rename phrase throughout code to something like macroTitle
+            var macroName = prompt("Enter a name for this macro:");
             
-            var phrase = prompt("Enter a name for this macro:");
-            
-            if (phrase) {
+            if (macroName) {
                 chrome.runtime.sendMessage({ // Set the launch text of the last recorded macro
-                    message: "setPhrase",
-                    phrase: phrase
+                    message: "saveMacro",
+                    macroName: macroName
                 });
 
                 // Add the new macro to the list
-                addMacroLi(phrase);
+                addMacroLi(macroName);
             }
         }
         else {
@@ -66,7 +64,7 @@ $(document).on('mousedown', '.macro', function(e) { // Need to use 'mousedown' t
     chrome.runtime.sendMessage({
         message: "run_macro",
         newTab: e.shiftKey || e.which === 2, // Open in a new tab if shift click or middle mouse click
-        phrase: $(this).find('.phrase').text()
+        macroName: $(this).find('.macro-name').text()
     });
 });
 
@@ -83,7 +81,7 @@ $(document).on('click', '.removeButton', function(e) {
     e.stopPropagation();
     chrome.runtime.sendMessage({
         message: "remove_macro",
-        phrase: $(this).siblings('.phrase').text()
+        macroName: $(this).siblings('.macro-name').text()
     });
 	$(this).parent().remove(); // Remove the <li> element
 });
