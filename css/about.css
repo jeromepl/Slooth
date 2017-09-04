@@ -1,0 +1,14 @@
+html {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    width: 200px;
+    text-align: center;
+}
+
+body {
+    padding-bottom: 10px;
+}
+
+p {
+    text-align: left;
+}

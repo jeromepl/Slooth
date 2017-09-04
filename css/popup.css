@@ -60,3 +60,17 @@ button {
     margin: 0 10px;
     padding: 2px;
 }
+
+footer {
+    text-align: center;
+    margin: 7px 0 6px 0;
+}
+
+footer a {
+    margin: 0 10px;
+    color: #929292;
+}
+
+footer a:hover {
+    color: #0068FF;
+}
