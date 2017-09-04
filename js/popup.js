@@ -1,5 +1,5 @@
 function addMacroLi(macroName) {
-    $("#macroList").append("<li class='macro'><div class='macro-name'>" + macroName + "</div><img class='removeButton' src='x-sm.png' title='Delete this macro'></li>");
+    $("#macroList").append("<li class='macro'><div class='macro-name'>" + macroName + "</div><img class='removeButton' src='img/x-sm.png' title='Delete this macro'></li>");
 }
 
 $(document).ready(function (e) {
@@ -70,10 +70,10 @@ $(document).on('mousedown', '.macro', function(e) { // Need to use 'mousedown' t
 
 // Highlight the "x" button on hover
 $(document).on('mouseenter', '.removeButton', function(e) {
-    $(this).attr("src", "x-sm-light.png");
+    $(this).attr("src", "img/x-sm-light.png");
 });
 $(document).on('mouseleave', '.removeButton', function(e) {
-    $(this).attr("src", "x-sm.png");
+    $(this).attr("src", "img/x-sm.png");
 });
 
 // Delete a macro
