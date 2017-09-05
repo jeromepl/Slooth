@@ -80,7 +80,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             }
             break;
         case "saveMacro": // Save the recorded actions into storage with the given name in request.macroName
-            console.log("Set macro name " + request.macroName);
+            console.log("Saving macro with name " + request.macroName);
             store(actions, request.macroName);
             break;
 

@@ -1,5 +1,11 @@
 function addMacroLi(macroName) {
-    $("#macroList").append("<li class='macro'><div class='macro-name'>" + macroName + "</div><img class='removeButton' src='img/x-sm.png' title='Delete this macro'></li>");
+    $("#macroList").append("<li class='macro'><div class='macro-name'>" + macroName + "</div><div class='remove-btn' title='Delete this macro'></div></li>");
+}
+
+/** Add an empty macro to the list to allow users to enter a name for the last recorded one */
+function addMacroLiEdit() {
+    $("#macroList").append("<li class='macro-edit'><input type='text' class='new-macro-name' placeholder='New macro name'><div class='save-btn' title='Save'></div><div class='cancel-btn' title='Cancel'></div></li>");
+    $(".new-macro-name").focus();
 }
 
 $(document).ready(function (e) {
@@ -37,17 +43,7 @@ $('#record').on('click', function (e) {
                 message: "stop_recording"
             });
             
-            var macroName = prompt("Enter a name for this macro:");
-            
-            if (macroName) {
-                chrome.runtime.sendMessage({ // Set the launch text of the last recorded macro
-                    message: "saveMacro",
-                    macroName: macroName
-                });
-
-                // Add the new macro to the list
-                addMacroLi(macroName);
-            }
+            addMacroLiEdit(); // Add an input field to allow entering a name for the new macro
         }
         else {
             $("#record").text("Stop Recording");
@@ -59,6 +55,42 @@ $('#record').on('click', function (e) {
     });
 });
 
+$(document).on('click', '.save-btn', function(e) {
+    saveMacro($(this).siblings('.new-macro-name').val());
+});
+$(document).on('keypress', '.new-macro-name', function(e) {
+    if (e.which === 13) {
+        saveMacro($(this).val());
+    }
+});
+
+function saveMacro(macroName) {
+    if (macroName) {
+        chrome.runtime.sendMessage({ // Set the launch text of the last recorded macro
+            message: "saveMacro",
+            macroName: macroName
+        });
+
+        // Add the new macro to the list
+        addMacroLi(macroName);
+    }
+    $('.macro-edit').remove(); // Remove the input field
+}
+
+$(document).on('click', '.cancel-btn', function(e) {
+    $('.macro-edit').remove();
+});
+
+// Delete a macro
+$(document).on('mousedown', '.remove-btn', function(e) {
+    e.stopPropagation();
+    chrome.runtime.sendMessage({
+        message: "remove_macro",
+        macroName: $(this).siblings('.macro-name').text()
+    });
+	$(this).parent().remove(); // Remove the <li> element
+});
+
 // Execute a macro
 $(document).on('mousedown', '.macro', function(e) { // Need to use 'mousedown' to get middle mouse clicks
     chrome.runtime.sendMessage({
@@ -66,22 +98,4 @@ $(document).on('mousedown', '.macro', function(e) { // Need to use 'mousedown' t
         newTab: e.shiftKey || e.which === 2, // Open in a new tab if shift click or middle mouse click
         macroName: $(this).find('.macro-name').text()
     });
-});
-
-// Highlight the "x" button on hover
-$(document).on('mouseenter', '.removeButton', function(e) {
-    $(this).attr("src", "img/x-sm-light.png");
-});
-$(document).on('mouseleave', '.removeButton', function(e) {
-    $(this).attr("src", "img/x-sm.png");
-});
-
-// Delete a macro
-$(document).on('click', '.removeButton', function(e) {
-    e.stopPropagation();
-    chrome.runtime.sendMessage({
-        message: "remove_macro",
-        macroName: $(this).siblings('.macro-name').text()
-    });
-	$(this).parent().remove(); // Remove the <li> element
 });

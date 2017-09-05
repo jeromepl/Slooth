@@ -34,7 +34,7 @@ button {
     background-color: #f1f1f1;
 }
 
-.macro {
+.macro, .macro-edit {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -50,15 +50,57 @@ button {
     color: white;
 }
 
-.macro:hover .removeButton {
+.macro:hover .remove-btn {
     filter: invert(100%);
 }
 
-.removeButton {
+.remove-btn {
     width: 10px;
     height: 10px;
-    margin: 0 10px;
-    padding: 2px;
+    margin: 1px 10px 0 10px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url('../img/x-sm.png');
+}
+
+.remove-btn:hover {
+    background-image: url('../img/x-sm-light.png');
+}
+
+.macro-edit {
+    padding: 4px 8px 4px 5px;
+}
+
+.macro-edit input {
+    width: 145px;
+    height: 17px;
+    padding-left: 3px;
+}
+
+.save-btn {
+    margin: 6px 0 0 1px;
+    height: 12px;
+    width: 13px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url('../img/check-sm.png');
+}
+
+.save-btn:hover {
+    background-image: url('../img/check-sm-light.png'); /* TODO */
+}
+
+.cancel-btn {
+    margin: 5px -3px 0 0;
+    height: 12px;
+    width: 12px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url('../img/x-sm.png');
+}
+
+.cancel-btn:hover {
+    background-image: url('../img/x-sm-light.png');
 }
 
 footer {
