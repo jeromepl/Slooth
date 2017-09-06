@@ -5,25 +5,26 @@
  value "popup.html".
  -->
 <html>
+    <head>
+        <title>Slooth</title>
+        <link rel="stylesheet" type="text/css" href="css/popup.css">
+        <script src="lib/jquery-2.2.0.min.js"></script>
+    </head>
 
-<head>
-    <title>Slooth</title>
-    <link rel="stylesheet" type="etxt/css" href="css/popup.css">
-    <script src="lib/jquery-2.2.0.min.js"></script>
+    <body>
 
-</head>
+        <div id="popup">
+            <button id="record">Record New Macro</button>
+        </div>
+        <ul id="macroList">
+            <!-- Where the macro list is displayed -->
+        </ul>
 
-<body>
+        <footer>
+            <a href="about.html">About</a>
+            <a href="https://github.com/jeromepl/Slooth/issues" target="_blank">Report a bug</a>
+        </footer>
 
-    <div id="popup">
-        <button id="record">Record New Macro</button>
-        <button id="launch-macro">Launch macro</button>
-    </div>
-    <ul id="macroList">
-        <!-- Where the macro list is displayed -->
-    </ul>
-
-    <script src="js/popup.js"></script>
-</body>
-
+        <script src="js/popup.js"></script>
+    </body>
 </html>

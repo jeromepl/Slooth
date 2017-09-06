@@ -1,62 +1,85 @@
-$(document).on('click', function (e) {
+// Register most events on the page. This works by first subscrbing to all events below on the document.body of the page.
+// Second, the stopPropagation and stopImmediatePropagation methods on Events are overriden in order to make sure that events
+// that don't bubble all the way up to the body are still registered.
+
+var trackedEvents = ["MOUSEDOWN", "MOUSEUP", "CLICK", "DBLCLICK", "KEYDOWN", "KEYUP", "KEYPRESS", "FOCUS", "BLUR", "SELECT", "CHANGE"];
+// TODO possibly add MOUSEMOVE, MOUSEDRAG, MOUSEOVER, (SCROLL?)
+
+function handleEvent(event) {
+    var eventValues = parseEvent(event);
+    
     chrome.runtime.sendMessage({
         message: "add_action",
         action: {
-            type: "click",
-            element: getQuery(e.target)
-        }
+            type: "event",
+            event: eventValues
+        }	
     });
+}
+
+function parseEvent(event) {
+    var eventValues = {};
+    var originalEvent = event;
+    
+    while (event instanceof Object) {
+        Object.getOwnPropertyNames(event).forEach(function (propName) {
+            var value = originalEvent[propName];
+            
+            if (propName === propName.toUpperCase()) // Avoid saving constant values
+                return;
+            
+            if (typeof originalEvent[propName] === 'object' || typeof originalEvent[propName] === 'function') {
+                if (originalEvent[propName] instanceof Element) {
+                    value = $(originalEvent[propName]).getQuery();
+                }
+                else {
+                    return;
+                }
+            }
+            
+            eventValues[propName] = value;
+        }, this);
+        
+        event = Object.getPrototypeOf(event);
+    }
+    
+    // Add the event type to the list of values:
+    var parentEvent;
+    if (originalEvent instanceof MouseEvent) {
+        parentEvent = "MouseEvent";
+    } else if (originalEvent instanceof KeyboardEvent) {
+        parentEvent = "KeyboardEvent";
+    } else if (originalEvent instanceof Event) {
+        parentEvent = "Event";
+    }
+        
+    eventValues.parentEvent = parentEvent;
+    
+    // Special case for "change" event: Add the value changed to the event
+    if (originalEvent.type === "change") {
+        eventValues.changed_value = originalEvent.target.value;
+    }
+    
+    return eventValues;
+}
+
+// Register all event listeners
+trackedEvents.forEach(function(event) {
+    document.body.addEventListener(event.toLowerCase(), handleEvent);
 });
 
-//TODO
-/*$(document).on('keyup', function (e) {
-    chrome.runtime.sendMessage({
-        message: "add_action",
-        action: {
-            type: "keyup",
-            element: e.which
-        }
-    })
-});*/
+// Override stopPropagation and stopImmediatePropagation
+var _stopPropagation = Event.prototype.stopPropagation;
+var _stopImmediatePropagation = Event.prototype.stopImmediatePropagation;
 
-//From an DOM element, get a query to that DOM element
-//TODO: jquery error when id contains ':' ?
-function getQuery(e) {
-    var element = e;
-    var query = [];
-
-    while(!element.id && element != $('html')[0]) {
-        var jEl = $(element);
-        if(jEl.index() > 0) { //Since nth-child, eq and nth-of-type dont work well with multiple sub-children, give up and just store the whole element
-            query.push('> ' + element.localName + ':nth-child(' + (jEl.index()+1) + ')');
-        }
-        else {
-            query.push('> ' + element.localName);
-        }
-        element = $(element).parent()[0];
-    }
-
-    var id;
-    if(id = element.id) //Add the last id
-        query.push('#' + id);
-    else
-        query.push('html');
-
-    //Reverse the array
-    for(var i = 0; i < query.length / 2; i++) {
-        var temp = query[i];
-        query[i] = query[query.length - 1 - i];
-        query[query.length - 1 - i] = temp;
-    }
-
-    //Assemble the string
-    var finalString = "";
-    if(query.length > 1)
-        finalString = query.join(" ");
-    else
-        finalString = query[0]; //joining a single element isn't nice
-
-    //console.log(finalString);
-    //console.log($(finalString)[0]);
-    return finalString;
-}
+// TODO test this
+Event.prototype.stopPropagation = function() {
+    handleEvent(this);
+    console.warn("Stopped propagation");
+    _stopPropagation.apply(this);
+};
+Event.prototype.stopImmediatePropagation = function() {
+    handleEvent(this);
+    console.warn("Stopped immediate propagation");
+    _stopImmediatePropagation.apply(this);
+};

@@ -1,19 +1,25 @@
+function addMacroLi(macroName) {
+    $("#macroList").append("<li class='macro'><div class='macro-name'>" + macroName + "</div><div class='remove-btn' title='Delete this macro'></div></li>");
+}
+
+/** Add an empty macro to the list to allow users to enter a name for the last recorded one */
+function addMacroLiEdit() {
+    $("#macroList").append("<li class='macro-edit'><input type='text' class='new-macro-name' placeholder='New macro name'><div class='save-btn' title='Save'></div><div class='cancel-btn' title='Cancel'></div></li>");
+    $(".new-macro-name").focus();
+}
+
 $(document).ready(function (e) {
-    var arrayMacros = [];
-    chrome.storage.local.get({ //Get the macros and display them
+    chrome.storage.local.get({ // Get the macros and display them
         userMacros: []
     }, function (result) {
-        console.log(result.userMacros.length);
-
         var userMacros = result.userMacros;
         for (var i = 0; i < userMacros.length; i++) {
-            arrayMacros.push(userMacros[i].activationPhrase);
-            $("#macroList").append("<li><div class='macro'><div id='phrase'>" + userMacros[i].activationPhrase + "</div><img id='removeButton' src='letter-x.png' width='25' height='25'></div></li>");
+            addMacroLi(userMacros[i].name);
         }
     });
     
-    //Ask the background script if a macro is being recorded at the moment
-    chrome.runtime.sendMessage({message: "is_recording"}, function(response) {
+    // Ask the background script if a macro is being recorded at the moment
+    chrome.runtime.sendMessage({ message: "is_recording" }, function(response) {
         if (!response.rec) {
             $("#record").text("Record New Macro");
             $("#record").removeClass("recording");
@@ -25,7 +31,7 @@ $(document).ready(function (e) {
     });
 });
 
-//Start/Stop recording
+// Start/Stop recording
 $('#record').on('click', function (e) {
     chrome.runtime.sendMessage({
         message: "is_recording"
@@ -36,6 +42,8 @@ $('#record').on('click', function (e) {
             chrome.runtime.sendMessage({
                 message: "stop_recording"
             });
+            
+            addMacroLiEdit(); // Add an input field to allow entering a name for the new macro
         }
         else {
             $("#record").text("Stop Recording");
@@ -47,26 +55,47 @@ $('#record').on('click', function (e) {
     });
 });
 
-//Open the microphone page to launch a macro
-$("#launch-macro").on("click", function (e) {
-    chrome.runtime.sendMessage({
-        message: "open_tab",
-        newUrl: "https://gator4158.hostgator.com/~anecdote/slooth.tech/recordPage.html?launch"
-    });
+$(document).on('click', '.save-btn', function(e) {
+    saveMacro($(this).siblings('.new-macro-name').val());
+});
+$(document).on('keypress', '.new-macro-name', function(e) {
+    if (e.which === 13) {
+        saveMacro($(this).val());
+    }
 });
 
-$('#macroList').on('click', function(e) {
-	if (e.target.id == "removeButton") {
-		chrome.runtime.sendMessage({
-	        message: "remove_macro",
-	        phrase: $(e.target).parent().children("#phrase").text()
-	    });
-		$(e.target).parent().remove();
-	}
-	else {
-		chrome.runtime.sendMessage({
-        	message: "run_macro",
-        	phrase: $(e.target).children("#phrase").text()
-    	});
-	}
+function saveMacro(macroName) {
+    if (macroName) {
+        chrome.runtime.sendMessage({ // Set the launch text of the last recorded macro
+            message: "saveMacro",
+            macroName: macroName
+        });
+
+        // Add the new macro to the list
+        addMacroLi(macroName);
+    }
+    $('.macro-edit').remove(); // Remove the input field
+}
+
+$(document).on('click', '.cancel-btn', function(e) {
+    $('.macro-edit').remove();
+});
+
+// Delete a macro
+$(document).on('mousedown', '.remove-btn', function(e) {
+    e.stopPropagation();
+    chrome.runtime.sendMessage({
+        message: "remove_macro",
+        macroName: $(this).siblings('.macro-name').text()
+    });
+	$(this).parent().remove(); // Remove the <li> element
+});
+
+// Execute a macro
+$(document).on('mousedown', '.macro', function(e) { // Need to use 'mousedown' to get middle mouse clicks
+    chrome.runtime.sendMessage({
+        message: "run_macro",
+        newTab: e.shiftKey || e.which === 2, // Open in a new tab if shift click or middle mouse click
+        macroName: $(this).find('.macro-name').text()
+    });
 });
