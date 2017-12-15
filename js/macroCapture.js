@@ -72,14 +72,12 @@ trackedEvents.forEach(function(event) {
 var _stopPropagation = Event.prototype.stopPropagation;
 var _stopImmediatePropagation = Event.prototype.stopImmediatePropagation;
 
-// TODO test this
+// FIXME this does not work as the content_scripts of the extension run in a sandboxed environment. Changes to 'Event' won't be reflected on the main page
 Event.prototype.stopPropagation = function() {
     handleEvent(this);
-    console.warn("Stopped propagation");
-    _stopPropagation.apply(this);
+    _stopPropagation.apply(this, arguments);
 };
 Event.prototype.stopImmediatePropagation = function() {
     handleEvent(this);
-    console.warn("Stopped immediate propagation");
-    _stopImmediatePropagation.apply(this);
+    _stopImmediatePropagation.apply(this, arguments);
 };

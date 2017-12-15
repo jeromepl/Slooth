@@ -2,6 +2,7 @@ var recording = false;
 var waiting = false; // If the current macro execution is waiting on a redirect to finish
 
 var actions = []; // The actions of the currently loaded macro, or the remaining actions to perform after a redirect
+var executingTabID; // The Chrome tab ID of the tab in which the macro is being executed
 
 updateBrowserBadge(); // Update the badge initially
 
@@ -51,14 +52,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             load(request.macroName, function() {
                 if (request.newTab) {
                     chrome.tabs.create({}, function(tab) {
-                        executeActions(tab);
+                        executingTabID = tab.id;
+                        executeActions(executingTabID);
                     });
                 } else {
                     chrome.tabs.query({
                         active: true,
                         currentWindow: true
                     }, function (tabs) {
-                        executeActions(tabs[0]);
+                        executingTabID = tabs[0].id;
+                        executeActions(executingTabID);
                     });
                 }
             });
@@ -71,12 +74,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             if (waiting) { // The redirect has finished, we can continue running the actions
                 console.log("Continue actions");
                 waiting = false;
-                chrome.tabs.query({
-                    active: true,
-                    currentWindow: true
-                }, function (tabs) {
-                    executeActions(tabs[0]);
-                });
+                executeActions(executingTabID);
             }
             break;
         case "saveMacro": // Save the recorded actions into storage with the given name in request.macroName
@@ -87,7 +85,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
-function executeActions(tab) {
+function executeActions(tabID) {
     for (var i = 0; i < actions.length; i++) {
         
         var actionType = actions[i].type;
@@ -96,7 +94,7 @@ function executeActions(tab) {
         
         if (actionType === "redirect") {
             // Redirects the current tab
-            chrome.tabs.update(tab.id, {
+            chrome.tabs.update(tabID, {
                 url: actions[i].url
             });
         }
@@ -107,7 +105,7 @@ function executeActions(tab) {
             waiting = true;
             break;
         } else { // The handlers for the other 'actionType's are in the content script. Send a message to run them
-            chrome.tabs.sendMessage(tab.id, {
+            chrome.tabs.sendMessage(tabID, {
                 message: "execute",
                 action: actions[i]
             });

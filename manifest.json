@@ -2,13 +2,14 @@
     "manifest_version": 2,
 
     "name": "Slooth",
-    "description": "This extension allows you to quickly navigate the web by recording and running macros",
+    "description": "Quickly navigate the web by recording your actions and playing them back",
     "version": "2.0",
 
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["lib/jquery-2.2.0.min.js", "js/jqueryPlugins.js", "js/execute.js", "js/macroCapture.js"]
+            "js": ["lib/jquery-2.2.0.min.js", "js/jqueryPlugins.js", "js/execute.js", "js/macroCapture.js"],
+            "run_at": "document_idle"
         }
     ],
 

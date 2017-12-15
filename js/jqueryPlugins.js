@@ -11,7 +11,7 @@
         var localName = this.prop('localName');
 
         if (id)
-            return '#' + id;
+            return '#' + escapeCSSString(id);
         if (localName === 'html')
             return 'html';
 
@@ -19,4 +19,10 @@
         var index = this.index(parentSelector + '>' + localName) + 1;
         return parentSelector + '>' + localName + ':nth-of-type(' + index + ')';
     };
+
+    // Colons and spaces are accepted in IDs in HTML but not in CSS syntax
+    // Similar (but much more simplified) to the CSS.escape() working draft
+    function escapeCSSString(cssString) {
+        return cssString.replace(/(:)/g, "\\$1");
+    }
 }(jQuery));

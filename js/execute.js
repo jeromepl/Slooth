@@ -24,6 +24,7 @@ function triggerEvent(savedEvent) {
             if ($element.length) {
                 savedEvent[key] = $element[0];
             } else {
+                // TODO When an element cannot be found, it could be that it is loaded asynchronously (waiting on some AJAX call). We could thus wait a few ms and try again
                 console.warn("Key '" + key + "' could not be parsed to element: " + savedEvent[key]);
                 savedEvent[key] = null;
             }
