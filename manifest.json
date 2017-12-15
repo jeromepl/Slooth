@@ -3,7 +3,7 @@
 
     "name": "Slooth",
     "description": "Quickly navigate the web by recording your actions and playing them back",
-    "version": "2.0",
+    "version": "2.1",
 
     "content_scripts": [
         {
